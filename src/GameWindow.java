@@ -50,17 +50,18 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
     public void keyPressed(KeyEvent e) {
 
        // System.out.println("ran");
+        int movamt = 20;
         if(e.getKeyCode() == KeyEvent.VK_UP){
-                if (TopLeft.y-1 > 0) {
-                    TopLeft.y -= 1;
+                if (TopLeft.y-movamt > 0) {
+                    TopLeft.y -= movamt;
                 }else {
                     TopLeft.y = 0;
                 }
 
         }
         if(e.getKeyCode() == KeyEvent.VK_DOWN){
-            if (TopLeft.y+1 < height - this.getHeight()) {
-                TopLeft.y += 1;
+            if (TopLeft.y+movamt < height - this.getHeight()) {
+                TopLeft.y += movamt;
             }
             else {
                 TopLeft.y = height - this.getHeight();
@@ -69,11 +70,9 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
         }
 
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-                if (TopLeft.x+20 < width - this.getWidth()){
-                        TopLeft.x += 20;
-                        this.setLocation(TopLeft.x, TopLeft.y);
+                if (TopLeft.x+movamt < width - this.getWidth()){
+                        TopLeft.x += movamt;
                         //sleep for 0.0001 seconds
-                        paintComponents(this.getGraphics());
 
                     TopLeft.x += 1;
                 }else {
@@ -85,8 +84,8 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
 
         }
         if(e.getKeyCode() == KeyEvent.VK_LEFT){
-            if (TopLeft.x-1 > 0) {
-                TopLeft.x -= 1;
+            if (TopLeft.x-movamt > 0) {
+                TopLeft.x -= movamt;
             }else {
                 TopLeft.x = 0;
             }
