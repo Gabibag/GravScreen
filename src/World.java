@@ -27,6 +27,7 @@ public static BufferedImage resize(BufferedImage img, int newW, int newH) {
     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
+    Rectangle r = new Rectangle(0,0,newW,newH);
     g.dispose();
     return dimg;
 }
@@ -36,8 +37,8 @@ public static BufferedImage resize(BufferedImage img, int newW, int newH) {
             try{
             if (new Rectangle(w.getLocationOnScreen().x, w.getLocationOnScreen().y, w.getWidth(),
                               w.getHeight()).contains(r)) {
-                             g.drawImage(resize(ground, r.width, r.height),r.BottomLeft.x - w.getX(), r.BottomLeft.y - w.getY() ,null );
-                             //g.drawRect(, r.width, r.height);
+                             g.setColor(Color.darkGray);
+                             g.drawRect(r.BottomLeft.x - w.getX(),r.BottomLeft.y - w.getY(), r.width, r.height);
             }
             }catch(Exception e){
                 //System.out.println("failed " + e);

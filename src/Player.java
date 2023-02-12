@@ -17,10 +17,24 @@ public class Player {
     boolean keyRight;
     boolean keyUp;
     boolean keyDown;
-
-    public void move(int i){
-        System.out.println("moving");
+    public void move(int i, int j) {
+     //   j+= 10;
+        Vector2 v = new Vector2((int) this.x + i, (int) this.y + j);
+        Rectangle s = new Rectangle(v.x, v.y, hitBox.width, hitBox.height);
+        for (Rectangle r : World.collision) {
+            //check if insdie r
+            if (r.contains(s)){
+                i = 0;
+                j = 0;
+            }
+        }
         this.x += i;
+        this.y += j;
+
+        this.hitBox = s;
+    }
+    public void move(){
+        this.move(0, 3);
     }
     public Player(int x, int y) {
         this.x = x;
