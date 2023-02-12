@@ -57,8 +57,6 @@ public class Player {
 
         x += xspeed;
         y += yspeed;
-        System.out.println(x);
-        System.out.println(y);
         hitBox.x = (int) x;
         hitBox.y = (int) y;
 
