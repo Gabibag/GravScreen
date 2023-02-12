@@ -1,11 +1,10 @@
-package asdf;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 
 public class Player {
-    gamepanel panel;
     double x;
     double y;
     double w;
@@ -20,10 +19,10 @@ public class Player {
     boolean keyUp;
     boolean keyDown;
 
-    public Player(int x, int y, gamepanel panel) {
+    public Player(int x, int y) {
         this.x = x;
         this.y = y;
-        this.panel = panel;
+        
 
         w = 50;
         h = 60;

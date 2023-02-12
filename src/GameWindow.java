@@ -13,11 +13,11 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
         super();
         this.getRootPane().setDoubleBuffered(false);
         world = new World();
-        world.collision.add((new Rectangle(50,50,50,50)));
-        world.collision.add((new Rectangle(90,90,100,300)));
+        World.collision.add((new Rectangle(50, 50, 50, 50)));
+        World.collision.add((new Rectangle(90, 90, 100, 300)));
         this.setIgnoreRepaint(true);
-        world.collision.add((new Rectangle(20,50,100,300)));
-        world.collision.add((new Rectangle(30,50,100,300)));
+        World.collision.add((new Rectangle(20, 50, 100, 300)));
+        World.collision.add((new Rectangle(30, 50, 100, 300)));
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         width = (int)size.getWidth();
         height = (int)size.getHeight();
@@ -50,18 +50,19 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
     public void keyPressed(KeyEvent e) {
 
        // System.out.println("ran");
-        int movamt = 20;
+        int movamtw = width/3;
+        int movamth = height/3;
         if(e.getKeyCode() == KeyEvent.VK_UP){
-                if (TopLeft.y-movamt > 0) {
-                    TopLeft.y -= movamt;
+                if (TopLeft.y-movamth > 0) {
+                    TopLeft.y -= movamth;
                 }else {
                     TopLeft.y = 0;
                 }
 
         }
         if(e.getKeyCode() == KeyEvent.VK_DOWN){
-            if (TopLeft.y+movamt < height - this.getHeight()) {
-                TopLeft.y += movamt;
+            if (TopLeft.y+movamth < height - this.getHeight()) {
+                TopLeft.y += movamth;
             }
             else {
                 TopLeft.y = height - this.getHeight();
@@ -70,8 +71,8 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
         }
 
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-                if (TopLeft.x+movamt < width - this.getWidth()){
-                        TopLeft.x += movamt;
+                if (TopLeft.x+movamtw < width - this.getWidth()){
+                        TopLeft.x += movamtw;
                         //sleep for 0.0001 seconds
 
                     TopLeft.x += 1;
@@ -79,13 +80,10 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
                     TopLeft.x = width - this.getWidth();
                 }
                 //sleep for 0.0001 seconds
-                paintComponents(this.getGraphics());
-
-
         }
         if(e.getKeyCode() == KeyEvent.VK_LEFT){
-            if (TopLeft.x-movamt > 0) {
-                TopLeft.x -= movamt;
+            if (TopLeft.x-movamtw > 0) {
+                TopLeft.x -= movamtw;
             }else {
                 TopLeft.x = 0;
             }
