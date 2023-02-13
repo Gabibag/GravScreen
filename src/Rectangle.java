@@ -1,4 +1,3 @@
-
 public class Rectangle {
     public Vector2 TopRight;
     public Vector2 BottomLeft;
@@ -6,17 +5,9 @@ public class Rectangle {
     public int height;
     public int x;
     public int y;
-
-    public boolean isBad() {
-        return bad;
-    }
-
-    public void setBad(boolean bad) {
-        this.bad = bad;
-    }
-
     public boolean bad;
-    public Rectangle(int x, int y, int width, int height, boolean bad){
+
+    public Rectangle(int x, int y, int width, int height, boolean bad) {
         this.TopRight = new Vector2(x + width, y + height);
         this.BottomLeft = new Vector2(x, y);
         this.x = x;
@@ -26,17 +17,23 @@ public class Rectangle {
         this.y = y;
 
     }
-    public boolean contains(Rectangle other){
+
+    public boolean isBad() {
+        return bad;
+    }
+
+    public void setBad(boolean bad) {
+        this.bad = bad;
+    }
+
+    public boolean contains(Rectangle other) {
         if (this.TopRight.y < other.BottomLeft.y
-      || this.BottomLeft.y > other.TopRight.y) {
-        return false;
-    }
-    if (this.TopRight.x < other.BottomLeft.x
-      || this.BottomLeft.x > other.TopRight.x) {
-        return false;
-    }
-   // System.out.println("inside");
-    return true;
+            || this.BottomLeft.y > other.TopRight.y) {
+            return false;
+        }
+        return this.TopRight.x >= other.BottomLeft.x
+               && this.BottomLeft.x <= other.TopRight.x;
+        // System.out.println("inside");
 
     }
 
