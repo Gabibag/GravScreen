@@ -17,7 +17,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     public int winYMove = 0;
 
 
-    public GamePanel() {
+    public GamePanel() throws CloneNotSupportedException {
         super();
         p = new Player(15, 15);
         this.rootPane.setDoubleBuffered(false);
@@ -40,6 +40,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         this.setUndecorated(true);
         this.addKeyListener(this);
         this.addComponentListener(this);
+        this.setAlwaysOnTop(true);
         //add test image as the jframe backgroun
 
 //        this.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
@@ -76,10 +77,11 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     }
 
     private static void innitWorld() {
-        World.collision.addAll(Arrays.asList((new Rectangle(1330, 420, 100, 10, true)), //kill floor
-                                             (new Rectangle(0, 110, 1200, 20, false)),
-                                             (new Rectangle(240, 430, 1200, 20, false)),
-                                             (new Rectangle(0, 750, 1450, 20, false))
+        World.collision.addAll(Arrays.asList((new Rectangle(1330, 420, 100, 10, true, false)), //kill floor
+                                             (new Rectangle(0, 110, 1200, 20, false, false)),
+                                             (new Rectangle(240, 430, 1200, 20, false, false)),
+                                             (new Rectangle(0, 750, 1450, 20, false, false)),
+                                             (new Rectangle(1340, 730, 40, 40, false, false))
         ));
     }
 

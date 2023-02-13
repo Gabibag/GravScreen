@@ -14,13 +14,13 @@ public class Player {
         this.y = y;
         w = 20;
         h = 20;
-        hitBox = new Rectangle(x, y, (int) w, (int) h, false);
+        hitBox = new Rectangle(x, y, (int) w, (int) h, false, false);
     }
 
     public void move(int i, int j) {
         //   j+= 10;
         Vector2 v = new Vector2((int) (this.x + i), (int) this.y + j);
-        Rectangle s = new Rectangle(v.x, v.y, hitBox.width, hitBox.height, false);
+        Rectangle s = new Rectangle(v.x, v.y, hitBox.width, hitBox.height, false, false);
         for (Rectangle r : World.collision) {
             //check if insdie r
             if (r.contains(s)) {
@@ -47,7 +47,7 @@ public class Player {
     }
 
     public void refreshHitBox() {
-        this.hitBox = new Rectangle((int) this.x, (int) this.y, hitBox.width, hitBox.height, false);
+        this.hitBox = new Rectangle((int) this.x, (int) this.y, hitBox.width, hitBox.height, false, false);
     }
 
     public void fall() {
@@ -56,9 +56,9 @@ public class Player {
 
 
     public void draw(GamePanel w, Graphics g) {
-        Rectangle r = new Rectangle((int) this.x, (int) this.y, (int) this.h, (int) this.w, false);
+        Rectangle r = new Rectangle((int) this.x, (int) this.y, (int) this.h, (int) this.w, false, false);
         if (new Rectangle(w.getLocationOnScreen().x, w.getLocationOnScreen().y, w.getWidth(), w.getHeight(),
-                          false).contains(r)) {
+                          false, false).contains(r)) {
             // System.out.println("aa");
             g.setColor(Color.black);
             //g.drawRect(5,5, 20,20);

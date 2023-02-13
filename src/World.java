@@ -25,7 +25,7 @@ public static BufferedImage resize(BufferedImage img, int newW, int newH) {
     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
-    Rectangle r = new Rectangle(0, 0, newW, newH, false);
+    Rectangle r = new Rectangle(0, 0, newW, newH, false, false);
     g.dispose();
     return dimg;
 }
@@ -34,8 +34,8 @@ public static BufferedImage resize(BufferedImage img, int newW, int newH) {
         for (Rectangle r : collision) {
             try{
             if (new Rectangle(w.getLocationOnScreen().x, w.getLocationOnScreen().y, w.getWidth(), w.getHeight(),
-                              false).contains(r)) {
-                             g.setColor((r.isBad() ? Color.RED : Color.DARK_GRAY) );
+                              false, false).contains(r)) {
+                             g.setColor((r.isBad() ? Color.RED : r.isWinBlock() ? Color.YELLOW : Color.darkGray) );
                              g.fillRect(r.BottomLeft.x - w.getX(),r.BottomLeft.y - w.getY(), r.width, r.height);
                              g.drawRect(r.BottomLeft.x - w.getX(),r.BottomLeft.y - w.getY(), r.width, r.height);
             }

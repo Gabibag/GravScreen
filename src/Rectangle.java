@@ -7,7 +7,17 @@ public class Rectangle {
     public int y;
     public boolean bad;
 
-    public Rectangle(int x, int y, int width, int height, boolean bad) {
+    public boolean isWinBlock() {
+        return winBlock;
+    }
+
+    public void setWinBlock(boolean winBlock) {
+        this.winBlock = winBlock;
+    }
+
+    public boolean winBlock;
+
+    public Rectangle(int x, int y, int width, int height, boolean bad, boolean winBlock) {
         this.TopRight = new Vector2(x + width, y + height);
         this.BottomLeft = new Vector2(x, y);
         this.x = x;
@@ -15,6 +25,7 @@ public class Rectangle {
         this.height = height;
         this.bad = bad;
         this.y = y;
+        this.winBlock = winBlock;
 
     }
 
