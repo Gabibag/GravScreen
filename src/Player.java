@@ -33,6 +33,11 @@ public class Player {
                 }
 
             }
+            if ((this.x<0&& i <0) || (this.y < 0 && j < 0) || (this.x > GamePanel.width- hitBox.width && i > 0) || (this.y > GamePanel.height -
+                                                                                                                             hitBox.height && j > 0)){
+                i = 0;
+                j = 0;
+            }
         }
         this.x += i;
         this.y += j;

@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public class GamePanel extends JFrame implements KeyListener, ComponentListener {
     final double WINDOWTOSCREEN = 3;
-    public int width;
-    public int height;
+    public static int width;
+    public static int height;
     public World world;
     public Player p;
     public Vector2 TopLeft = new Vector2(0, 0);
@@ -76,7 +76,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     }
 
     private static void innitWorld() {
-        World.collision.addAll(Arrays.asList((new Rectangle(1330, 420, 100, 50, true)), //kill floor
+        World.collision.addAll(Arrays.asList((new Rectangle(1330, 420, 100, 10, true)), //kill floor
                                              (new Rectangle(0, 110, 1200, 20, false)),
                                              (new Rectangle(240, 430, 1200, 20, false)),
                                              (new Rectangle(0, 750, 1450, 20, false))
@@ -104,21 +104,23 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         TopLeft.y += y;
         this.setLocation(TopLeft.x, TopLeft.y);
         //sleep for 1ms
+
+        paintComponents(this.getGraphics());
+        p.refreshHitBox();
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        paintComponents(this.getGraphics());
         p.refreshHitBox();
+        paintComponents(this.getGraphics());
     }
     public void keyPressed(KeyEvent e) {
 
         if (e.getKeyChar() == 'w') {
-            if (p.touching()) {
-                for (int i = 0; i < 20; i++) {
-                    p.move(0, -4);
-                    paintComponents(this.getGraphics());
+            if (!p.touching()) {
+                for (int i = 0; i < 2; i++) {
+                    p.move(0, -40);
                 }
 
             }
@@ -132,6 +134,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
             xMove = 1;
             p.move(xMove, yMove);
         }
+
         // System.out.println("ran");
         // System.out.println("ran");
         int movamtw = width / 3;
@@ -176,7 +179,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
             }
             else {
                 while (TopLeft.x != width - this.getWidth()){
-                TopLeft.x += 1;
+                    moveFrame(1, 0);
 
                 }
             }
