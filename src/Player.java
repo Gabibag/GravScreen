@@ -48,8 +48,8 @@ public class Player {
     public Player(int x, int y) {
         this.x = x;
         this.y = y;
-        w = 80;
-        h = 90;
+        w = 40;
+        h = 40;
         hitBox = new Rectangle(x, y, (int) w, (int) h, false);
     }
 

@@ -54,9 +54,13 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
         Timer timer = new Timer(2, timerActionEvent -> {
             p.fall();
             p.move(xMove, yMove);
+
+        });
+        Timer refresh = new Timer(1, timerActionEvent -> {
             paintComponents(this.getGraphics());
         });
         timer.start();
+        refresh.start();
 
 /*        Thread s = new Thread(() -> {
             while(true){
@@ -91,112 +95,17 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
 
     public void keyPressed(KeyEvent e) {
         if(e.getKeyChar() == 'w'){
-            if (!p.touching()) {
+            if (p.touching()) {
                 p.move(0,-80);
+
             }
         }
-        if(e.getKeyChar() == 'a') {xMove = -1;}
+        if(e.getKeyChar() == 'a') {xMove = -1;
+            p.move(xMove, yMove);}
         //if(e.getKeyChar() == 's') //
-        if(e.getKeyChar() == 'd') {xMove = 1;}
+        if(e.getKeyChar() == 'd') {xMove = 1;
+            p.move(xMove, yMove);}
        // System.out.println("ran");
-        /*int movamtw = width/3;
-        int movamth = height/3;
-        int smoothness = 100;
-        if(e.getKeyCode() == KeyEvent.VK_UP){
-            if (TopLeft.y - movamth > 0) {//if the top
-                for (int i = 0; i < smoothness; i++) {
-                    TopLeft.y -= movamth / smoothness;
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    this.setLocation(TopLeft.x, TopLeft.y);
-                    //sleep for 0.0001 second
-
-                    paintComponents(this.getGraphics());
-                }
-            }
-        }
-        if(e.getKeyCode() == KeyEvent.VK_DOWN){
-            if (TopLeft.y + movamth < height) {
-                for (int i = 0; i < smoothness; i++) {
-                    TopLeft.y += movamth / smoothness;
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    this.setLocation(TopLeft.x, TopLeft.y);
-                    //sleep for 0.0001 second
-
-                    paintComponents(this.getGraphics());
-                }
-            }
-            else {
-                //move to bottom by a fifth of the screen. put that inside a for loop, then add a 1ms delay
-                smoothness = (height-TopLeft.x)/100;
-                for (int i = 0; i < smoothness; i++) {
-                    TopLeft.y += smoothness;
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    paintComponents(this.getGraphics());
-                    this.setLocation(TopLeft.x, TopLeft.y);
-                    paintComponents(this.getGraphics());
-
-                    //sleep for 0.0001 second
-
-
-                }
-            }
-
-        }
-
-        if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-            if (TopLeft.x + movamtw< width-this.getWidth()) {
-                for (int i = 0; i < smoothness; i++) {
-                    TopLeft.x += movamtw / smoothness;
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    this.setLocation(TopLeft.x, TopLeft.y);
-                    //sleep for 0.0001 second
-
-                    paintComponents(this.getGraphics());
-                }
-            }else {
-                TopLeft.x = width-this.getWidth();
-            }
-                //sleep for 0.0001 seconds
-        }
-        if(e.getKeyCode() == KeyEvent.VK_LEFT){
-            if (TopLeft.x - movamtw > 0) {
-                for (int i = 0; i < smoothness; i++) {
-                    TopLeft.x -= movamtw / smoothness;
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    this.setLocation(TopLeft.x, TopLeft.y);
-                    //sleep for 0.0001 second
-                    paintComponents(this.getGraphics());
-                }
-            }else {
-                TopLeft.x = 0;
-            }
-
-        }
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-            System.exit(0);
-        }
-        this.setLocation(TopLeft.x, TopLeft.y);
-        paintComponents(this.getGraphics());*/
         // System.out.println("ran");
         int movamtw = width/3;
         int movamth = height/3;
@@ -268,7 +177,10 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
   public void componentHidden(ComponentEvent e) {
   }
     public void keyReleased(KeyEvent e) {
-         if((e.getKeyChar() == 'w')||(e.getKeyChar() == 's')) yMove = 0;
+         if((e.getKeyChar() == 'w')||(e.getKeyChar() == 's')) {
+             yMove = 0;
+
+         }
         if((e.getKeyChar() == 'a')||(e.getKeyChar() == 'd')) xMove = 0;
     }
 
