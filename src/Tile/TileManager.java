@@ -1,9 +1,9 @@
 //package Tile;
 
 //public class TileManager {
-//     GameWindow gw;
+//     GamePanel gw;
 // Tile[] tile;
-//     public TileManager(GameWindow gw) {
+//     public TileManager(GamePanel gw) {
 //         this.gw = gw;
 //         tile = new Tile[10];
 //         getTileImage();

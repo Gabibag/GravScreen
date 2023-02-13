@@ -4,33 +4,23 @@ import java.awt.event.KeyEvent;
 import java.awt.event.*;
 
 
-public class GameWindow extends JFrame implements KeyListener, ComponentListener{
+public class GamePanel extends JFrame implements KeyListener, ComponentListener{
     final double WINDOWTOSCREEN = 3;
     public int width;
     public int height;
     public World world;
     public Player p;
     public Vector2 TopLeft = new Vector2(0,0);
-    public GameWindow() {
+    public GamePanel() {
         super();
          p = new Player(15,15);
-        Thread s = new Thread(() -> {
-            while(true){
-                p.move();
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        s.start();
+        this.rootPane.setDoubleBuffered(false);
 
-        this.getRootPane().setDoubleBuffered(false);
         world = new World();
-        World.collision.add((new Rectangle(0, 110, 1200, 50)));
-        World.collision.add((new Rectangle(240, 430, 1200, 50)));
-        World.collision.add((new Rectangle(0, 750, 1200, 50)));
+        World.collision.add((new Rectangle(1330, 420, 100, 10, true)));
+        World.collision.add((new Rectangle(0, 110, 1200, 50, false)));
+        World.collision.add((new Rectangle(240, 430, 1200, 50, false)));
+        World.collision.add((new Rectangle(0, 750, 1200, 50, false)));
       //  World.collision.add((new Rectangle(90, 90, 100, 300)));
         this.setIgnoreRepaint(true);
         //World.collision.add((new Rectangle(20, 50, 100, 300)));
@@ -43,14 +33,30 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
         size.setSize(width/WINDOWTOSCREEN, height/WINDOWTOSCREEN);
         this.setSize(size.width, size.height);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.setUndecorated(true);
         this.addKeyListener(this);
         this.addComponentListener(this);
         //add test image as the jframe backgroun
-        this.setUndecorated(true);
+
 //        this.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
         //add a rounded border to the jframe
 //        this.world.Draw(this, this.getGraphics());
         this.setVisible(true);
+        paintComponents(this.getGraphics());
+        Thread s = new Thread(() -> {
+            while(true){
+                p.fall();
+                paintComponents(this.getGraphics());
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        s.start();
 
     }
     @Override
@@ -59,14 +65,16 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
         super.paintComponents(g);
         //g.setColor(Color.white);
         this.getRootPane().paintImmediately(0, 0, this.getWidth(), this.getHeight());
+//        this.repaint();
         this.world.Draw(this, g);
         p.draw(this,g);
     }
+
     @Override
-    public void update(Graphics g){
-        System.out.println("aaaaaaaa");
-        p.move(0,0);
+    public void paint(Graphics g) {
+        super.paint(g);
     }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -74,9 +82,8 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
 
 
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyChar());
         if(e.getKeyChar() == 'w'){
-            p.move(0,-20);
+            p.move(0,-50);
         }
         if(e.getKeyChar() == 'a') {p.move(-20, 0);}
         //if(e.getKeyChar() == 's') //
@@ -190,7 +197,7 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
             }else {
                 TopLeft.y = 0;
             }
-        paintComponents(this.getGraphics());
+
 
 
         }
@@ -202,7 +209,6 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
                 TopLeft.y = height - this.getHeight();
             }
 
-        paintComponents(this.getGraphics());
         }
 
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
@@ -216,7 +222,6 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
             }
             //sleep for 0.0001 seconds
 
-        paintComponents(this.getGraphics());
         }
         if(e.getKeyCode() == KeyEvent.VK_LEFT){
             if (TopLeft.x-movamtw > 0) {
@@ -224,13 +229,14 @@ public class GameWindow extends JFrame implements KeyListener, ComponentListener
             }else {
                 TopLeft.x = 0;
             }
-        paintComponents(this.getGraphics());
 
         }
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
             System.exit(0);
         }
+        paintComponents(this.getGraphics());
         this.setLocation(TopLeft.x, TopLeft.y);
+        p.move(0,0);
         paintComponents(this.getGraphics());
 
 
