@@ -11,6 +11,13 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
     public World world;
     public Player p;
     public Vector2 TopLeft = new Vector2(0,0);
+    public int yMove = 0;
+    public int xMove = 0;
+    public int winXMove = 0;
+    public int winYMove = 0;
+
+
+
     public GamePanel() {
         super();
          p = new Player(15,15);
@@ -44,7 +51,14 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
 //        this.world.Draw(this, this.getGraphics());
         this.setVisible(true);
         paintComponents(this.getGraphics());
-        Thread s = new Thread(() -> {
+        Timer timer = new Timer(2, timerActionEvent -> {
+            p.fall();
+            p.move(xMove, yMove);
+            paintComponents(this.getGraphics());
+        });
+        timer.start();
+
+/*        Thread s = new Thread(() -> {
             while(true){
                 p.fall();
                 paintComponents(this.getGraphics());
@@ -56,7 +70,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
 
             }
         });
-        s.start();
+        s.start();*/
 
     }
     @Override
@@ -64,31 +78,26 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
         //p.set();
         super.paintComponents(g);
         //g.setColor(Color.white);
-        this.getRootPane().paintImmediately(0, 0, this.getWidth(), this.getHeight());
-//        this.repaint();
         this.world.Draw(this, g);
         p.draw(this,g);
+
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
+
     }
-
-
 
     public void keyPressed(KeyEvent e) {
         if(e.getKeyChar() == 'w'){
-            p.move(0,-50);
+            if (!p.touching()) {
+                p.move(0,-80);
+            }
         }
-        if(e.getKeyChar() == 'a') {p.move(-20, 0);}
+        if(e.getKeyChar() == 'a') {xMove = -1;}
         //if(e.getKeyChar() == 's') //
-        if(e.getKeyChar() == 'd') {p.move(20, 0);}
-        if(e.getKeyChar() == 's') {p.move(0, 20);}
+        if(e.getKeyChar() == 'd') {xMove = 1;}
        // System.out.println("ran");
         /*int movamtw = width/3;
         int movamth = height/3;
@@ -259,10 +268,8 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener{
   public void componentHidden(ComponentEvent e) {
   }
     public void keyReleased(KeyEvent e) {
-         if(e.getKeyChar() == 'w') p.keyUp = false;
-        if(e.getKeyChar() == 'a') p.keyLeft = false;
-        if(e.getKeyChar() == 's') p.keyDown = false;
-        if(e.getKeyChar() == 'd') p.keyRight = false;
+         if((e.getKeyChar() == 'w')||(e.getKeyChar() == 's')) yMove = 0;
+        if((e.getKeyChar() == 'a')||(e.getKeyChar() == 'd')) xMove = 0;
     }
 
 
