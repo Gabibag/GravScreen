@@ -143,14 +143,12 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
             draggable = 0;
         }
 
-        if (e.getKeyChar() == 'w') {
-            if (!p.touching()) {
+        if (e.getKeyChar() == 'w'&&draggable==1) {
                 gravity = -1;
-            }
-        }if (e.getKeyChar() == 's') {
-            if (!p.touching()) {
+
+        }if (e.getKeyChar() == 's'&&draggable==1) {
                 gravity = 1;
-            }
+
         }
         if (e.getKeyChar() == 'a') {
             xMove = -1;
