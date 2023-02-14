@@ -50,12 +50,12 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
             p.move(xMove*draggable, yMove*draggable);
             //check to see if the window will be between the edges of the screen
         });
-        Timer gravity = new Timer(2, timerActionEvent -> {
+        Timer gravity = new Timer(3, timerActionEvent -> {
             p.fall();
             //check to see if the window will be between the edges of the screen
         });
 
-        Timer refresh = new Timer(1000/120, timerActionEvent -> {
+        Timer refresh = new Timer(1000/240, timerActionEvent -> {
             if ((draggable==1)) {
                 this.setLocation(p.x - (int)(width/WINDOWTOSCREEN/2), p.y - ((int) (height / WINDOWTOSCREEN / 2)));
             }
@@ -129,29 +129,17 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     public void keyTyped(KeyEvent e) {
 
     }
-    public void moveFrame(int x, int y) {
-        TopLeft.x += x;
-        TopLeft.y += y;
-        this.setLocation(TopLeft.x, TopLeft.y);
-        //sleep for 1ms
 
-        p.refreshHitBox();
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        paintComponents(this.getGraphics());
-    }
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'q') {
             this.removeMouseListener(frameDragListener);
             this.removeMouseMotionListener(frameDragListener);
+            this.setSize((int) (width / (WINDOWTOSCREEN)), (int) (height / (WINDOWTOSCREEN)));
             draggable = 1;
         } else if (e.getKeyChar() == 'e') {
             this.addMouseListener(frameDragListener);
             this.addMouseMotionListener(frameDragListener);
+            this.setSize((int) (width / (WINDOWTOSCREEN /2)), (int) (height / (WINDOWTOSCREEN / 2)));
             draggable = 0;
         }
 
@@ -203,7 +191,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     }
 
     public void keyReleased(KeyEvent e) {
-        if ((e.getKeyChar() == 'a') || (e.getKeyChar() == 'd')) {
+        if (e.getKeyChar() == 'a'||e.getKeyChar() == 'd') {
             xMove = 0;
         }
     }

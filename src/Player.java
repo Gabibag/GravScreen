@@ -28,8 +28,8 @@ public class Player {
                 j = 0;
 
                 if (r.isBad()) {
-                    this.x = 15;
-                    this.y = 15;
+                    this.x = 100;
+                    this.y = 100;
                 }
 
             }
