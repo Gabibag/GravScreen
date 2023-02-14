@@ -28,8 +28,8 @@ public class Player {
                 j = 0;
 
                 if (r.isBad()) {
-                    this.x = 0;
-                    this.y = 0;
+                    this.x = 15;
+                    this.y = 15;
                 }
 
             }
@@ -51,7 +51,7 @@ public class Player {
     }
 
     public void fall() {
-        this.move(0, 1);
+        this.move(0, GamePanel.gravity);
     }
 
 

@@ -16,11 +16,12 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     public int yMove = 0;
     public int xMove = 0;
     public int draggable = 1;
+    public static int gravity = 1;
 
 
     public GamePanel()  {
         super();
-        p = new Player(15, 15);
+        p = new Player(100, 100);
         this.rootPane.setDoubleBuffered(false);
 
         world = new World();
@@ -96,17 +97,19 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
                                              (new Rectangle(0, 210, 1200, 20, false, false)),
                                              (new Rectangle(240, 530, 1200, 20, false, false)),
                                              (new Rectangle(0, 850, 1450, 20, false, false)),
-                                             (new Rectangle(1340, 830, 40, 40, false, false))
+                                             (new Rectangle(1340, 830, 40, 40, false, true)),
+                                             (new Rectangle(0, 20, 1440, 1, false, false))
         ));
     }
     private static void ascendWorld(){
         //remove everything in collision
-        World.collision.addAll(Arrays.asList((new Rectangle(1210, 520, 220, 10, true, false)), //kill floor
-                                             (new Rectangle(0, 210, 1200, 20, false, false)),
-                                             (new Rectangle(240, 530, 1200, 20, false, false)),
-                                             (new Rectangle(0, 850, 1450, 20, false, false)),
-                                             (new Rectangle(1340, 830, 40, 40, false, false))
-        ));
+        World.collision.clear();
+        World.collision.addAll(Arrays.asList(
+                (new Rectangle(0, 210, 600, 20, false, false)),
+                (new Rectangle(680, 210, 600, 20, false, false)),
+                (new Rectangle(680, 410, 600, 20, false, false))
+                )
+        );
     }
 
     @Override
@@ -154,16 +157,11 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
 
         if (e.getKeyChar() == 'w') {
             if (!p.touching()) {
-                for (int i = 0; i < 8; i++) {
-                    p.move(0, -10);
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
-                    }
-                    ;
-                }
-
+                gravity = -1;
+            }
+        }if (e.getKeyChar() == 's') {
+            if (!p.touching()) {
+                gravity = 1;
             }
         }
         if (e.getKeyChar() == 'a') {
@@ -178,65 +176,6 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         // System.out.println("ran");
         int movamtw = width / 3;
         int movamth = height / 3;
-        /*if (e.getKeyCode() == KeyEvent.VK_UP) {
-            if (TopLeft.y - movamth > 0) {
-                for (int i = 0; i < movamth; i++) {
-                    moveFrame(0, -1);
-                }
-            }
-            else {
-                while (TopLeft.y != 0) {
-                    moveFrame(0, -1);
-                }
-            }
-
-
-        }
-        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            if (TopLeft.y + movamth < height - this.getHeight()) {
-                for (int i = 0; i < movamth; i++) {
-                    moveFrame(0, 1);
-                }
-            }
-            else {
-                while (TopLeft.y != height - this.getHeight()) {
-                    moveFrame(0, 1);
-
-                }
-            }
-
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if (TopLeft.x + movamtw < width - this.getWidth()) {
-                for (int i = 0; i < movamtw; i++) {
-                    moveFrame(1, 0);
-                }
-
-                TopLeft.x += 1;
-            }
-            else {
-                while (TopLeft.x != width - this.getWidth()){
-                    moveFrame(1, 0);
-
-                }
-            }
-            //sleep for 0.0001 seconds
-
-        }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            if (TopLeft.x - movamtw > 0) {
-                for (int i = 0; i < movamtw; i++) {
-                    moveFrame(-1, 0);
-                }
-            }
-            else {
-                while (TopLeft.x != 0) {
-                    moveFrame(-1, 0);
-                }
-            }
-
-        }*/
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
