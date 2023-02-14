@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 
 public class GamePanel extends JFrame implements KeyListener, ComponentListener {
+    FrameDragListener frameDragListener = new FrameDragListener(this);
     final double WINDOWTOSCREEN = 3;
     public static int width;
     public static int height;
@@ -13,21 +14,17 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     public Vector2 TopLeft = new Vector2(0, 0);
     public int yMove = 0;
     public int xMove = 0;
-    public int winXMove = 0;
-    public int winYMove = 0;
+    public int draggable = 1;
 
 
-    public GamePanel() throws CloneNotSupportedException {
+    public GamePanel()  {
         super();
         p = new Player(15, 15);
         this.rootPane.setDoubleBuffered(false);
 
         world = new World();
         innitWorld();
-        //  World.collision.add((new Rectangle(90, 90, 100, 300)));
         this.setIgnoreRepaint(true);
-        //World.collision.add((new Rectangle(20, 50, 100, 300)));
-        //World.collision.add((new Rectangle(30, 50, 100, 300)));
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         width = (int) size.getWidth();
         height = (int) size.getHeight();
@@ -36,52 +33,66 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         size.setSize(width / WINDOWTOSCREEN, height / WINDOWTOSCREEN);
         this.setSize(size.width, size.height);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
         this.setUndecorated(true);
+
+        this.addMouseListener(frameDragListener);
+        this.addMouseMotionListener(frameDragListener);
+
         this.addKeyListener(this);
+
         this.addComponentListener(this);
         this.setAlwaysOnTop(true);
-        //add test image as the jframe backgroun
 
-//        this.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
-        //add a rounded border to the jframe
-//        this.world.Draw(this, this.getGraphics());
         this.setVisible(true);
         paintComponents(this.getGraphics());
-        Timer timer = new Timer(2, timerActionEvent -> {
+        this.world.Draw(this, this.getGraphics());
+        Timer timer = new Timer(1, timerActionEvent -> {
             p.fall();
-            p.move(xMove, yMove);
+            p.move(xMove*draggable, yMove*draggable);
+            //check to see if the window will be between the edges of the screen
+            if ((draggable==1)) {
+                this.setLocation(p.x - width/6, p.y - height/6);
+            }
 
-        });
-        Timer refresh = new Timer(1, timerActionEvent -> {
             paintComponents(this.getGraphics());
+        });
+        Timer refresh = new Timer(0, timerActionEvent -> {
             p.refreshHitBox();
         });
         timer.start();
         refresh.start();
 
-/*        Thread s = new Thread(() -> {
-            while(true){
-                p.fall();
-                paintComponents(this.getGraphics());
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-            }
-        });
-        s.start();*/
+    }
+    public static class FrameDragListener extends MouseAdapter {
 
+        private final JFrame frame;
+        private Point mouseDownCompCoords = null;
+
+        public FrameDragListener(JFrame frame) {
+            this.frame = frame;
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            mouseDownCompCoords = null;
+        }
+
+        public void mousePressed(MouseEvent e) {
+            mouseDownCompCoords = e.getPoint();
+        }
+
+        public void mouseDragged(MouseEvent e) {
+            Point currCoords = e.getLocationOnScreen();
+            frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+        }
     }
 
     private static void innitWorld() {
-        World.collision.addAll(Arrays.asList((new Rectangle(1330, 420, 100, 10, true, false)), //kill floor
-                                             (new Rectangle(0, 110, 1200, 20, false, false)),
-                                             (new Rectangle(240, 430, 1200, 20, false, false)),
-                                             (new Rectangle(0, 750, 1450, 20, false, false)),
-                                             (new Rectangle(1340, 730, 40, 40, false, false))
+        World.collision.addAll(Arrays.asList((new Rectangle(1330, 520, 100, 10, true, false)), //kill floor
+                                             (new Rectangle(0, 210, 1200, 20, false, false)),
+                                             (new Rectangle(240, 530, 1200, 20, false, false)),
+                                             (new Rectangle(0, 850, 1450, 20, false, false)),
+                                             (new Rectangle(1340, 830, 40, 40, false, false))
         ));
     }
 
@@ -89,9 +100,10 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     public void paintComponents(Graphics g) {
         //p.set();
         super.paintComponents(g);
-        //g.setColor(Color.white);
+        g.setColor(Color.gray);
         this.world.Draw(this, g);
         p.draw(this, g);
+        p.refreshHitBox();
 
     }
 
@@ -107,17 +119,25 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         this.setLocation(TopLeft.x, TopLeft.y);
         //sleep for 1ms
 
-        paintComponents(this.getGraphics());
         p.refreshHitBox();
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        p.refreshHitBox();
+
         paintComponents(this.getGraphics());
     }
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyChar() == 'q') {
+            this.removeMouseListener(frameDragListener);
+            this.removeMouseMotionListener(frameDragListener);
+            draggable = 1;
+        } else if (e.getKeyChar() == 'e') {
+            this.addMouseListener(frameDragListener);
+            this.addMouseMotionListener(frameDragListener);
+            draggable = 0;
+        }
 
         if (e.getKeyChar() == 'w') {
             if (!p.touching()) {
@@ -141,8 +161,7 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         // System.out.println("ran");
         int movamtw = width / 3;
         int movamth = height / 3;
-        int smoothness = 10;
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
+        /*if (e.getKeyCode() == KeyEvent.VK_UP) {
             if (TopLeft.y - movamth > 0) {
                 for (int i = 0; i < movamth; i++) {
                     moveFrame(0, -1);
@@ -200,11 +219,10 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
                 }
             }
 
-        }
+        }*/
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
-        paintComponents(this.getGraphics());
         this.setLocation(TopLeft.x, TopLeft.y);
         p.refreshHitBox();
         paintComponents(this.getGraphics());
@@ -229,10 +247,6 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     }
 
     public void keyReleased(KeyEvent e) {
-        if ((e.getKeyChar() == 'w') || (e.getKeyChar() == 's')) {
-            yMove = 0;
-
-        }
         if ((e.getKeyChar() == 'a') || (e.getKeyChar() == 'd')) {
             xMove = 0;
         }
