@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
@@ -6,7 +7,7 @@ import java.util.Arrays;
 
 public class GamePanel extends JFrame implements KeyListener, ComponentListener {
     FrameDragListener frameDragListener = new FrameDragListener(this);
-    final double WINDOWTOSCREEN = 3;
+    final double WINDOWTOSCREEN = 6;
     public static int width;
     public static int height;
     public World world;
@@ -35,8 +36,6 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setUndecorated(true);
 
-        this.addMouseListener(frameDragListener);
-        this.addMouseMotionListener(frameDragListener);
 
         this.addKeyListener(this);
 
@@ -47,23 +46,28 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
         paintComponents(this.getGraphics());
         this.world.Draw(this, this.getGraphics());
         Timer timer = new Timer(1, timerActionEvent -> {
-            p.fall();
             p.move(xMove*draggable, yMove*draggable);
             //check to see if the window will be between the edges of the screen
-            if ((draggable==1)) {
-                this.setLocation(p.x - width/6, p.y - height/6);
-            }
-
-            paintComponents(this.getGraphics());
         });
-        Timer refresh = new Timer(0, timerActionEvent -> {
+        Timer gravity = new Timer(2, timerActionEvent -> {
+            p.fall();
+            //check to see if the window will be between the edges of the screen
+        });
+
+        Timer refresh = new Timer(1000/120, timerActionEvent -> {
+            if ((draggable==1)) {
+                this.setLocation(p.x - (int)(width/WINDOWTOSCREEN/2), p.y - ((int) (height / WINDOWTOSCREEN / 2)));
+            }
+            paintComponents(this.getGraphics());
             p.refreshHitBox();
         });
         timer.start();
         refresh.start();
+        gravity.start();
 
 
     }
+
     public static class FrameDragListener extends MouseAdapter {
 
         private final JFrame frame;
@@ -88,7 +92,16 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
     }
 
     private static void innitWorld() {
-        World.collision.addAll(Arrays.asList((new Rectangle(1330, 520, 100, 10, true, false)), //kill floor
+        World.collision.addAll(Arrays.asList((new Rectangle(1210, 520, 220, 10, true, false)), //kill floor
+                                             (new Rectangle(0, 210, 1200, 20, false, false)),
+                                             (new Rectangle(240, 530, 1200, 20, false, false)),
+                                             (new Rectangle(0, 850, 1450, 20, false, false)),
+                                             (new Rectangle(1340, 830, 40, 40, false, false))
+        ));
+    }
+    private static void ascendWorld(){
+        //remove everything in collision
+        World.collision.addAll(Arrays.asList((new Rectangle(1210, 520, 220, 10, true, false)), //kill floor
                                              (new Rectangle(0, 210, 1200, 20, false, false)),
                                              (new Rectangle(240, 530, 1200, 20, false, false)),
                                              (new Rectangle(0, 850, 1450, 20, false, false)),
@@ -141,20 +154,24 @@ public class GamePanel extends JFrame implements KeyListener, ComponentListener 
 
         if (e.getKeyChar() == 'w') {
             if (!p.touching()) {
-                for (int i = 0; i < 2; i++) {
-                    p.move(0, -40);
+                for (int i = 0; i < 8; i++) {
+                    p.move(0, -10);
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                    ;
                 }
 
             }
         }
         if (e.getKeyChar() == 'a') {
             xMove = -1;
-            p.move(xMove, yMove);
         }
         //if(e.getKeyChar() == 's') //
         if (e.getKeyChar() == 'd') {
             xMove = 1;
-            p.move(xMove, yMove);
         }
 
         // System.out.println("ran");
